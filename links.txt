@@ -1,1 +1,33 @@
 https://www.collabora.com/news-and-blog/blog/2019/04/05/an-ebpf-overview-part-1-introduction/
+
+interesting simple usages of Brendan Gregg's bpftrace:
+https://fedoramagazine.org/trace-code-in-fedora-with-bpftrace/
+
+prints the parent process name (comm) and the name of every new process being created in the system:
+$ sudo bpftrace -e 't:syscalls:sys_enter_execve { printf("%s called %s\n", comm, str(args->filename)); }'
+
+All available fields of the tracepoint can be listed with this command:
+bpftrace -lv "t:syscalls:sys_enter_execve"
+
+All available kprobe/kretprobe, tracepoints, software and hardware probes
+sudo bpftrace -l
+
+etc....
+
+    killsnoop.bt – Trace signals issued by the kill() syscall.
+    tcpconnect.bt – Trace all TCP network connections.
+    pidpersec.bt – Count new procesess (via fork) per second.
+    opensnoop.bt – Trace open() syscalls.
+    vfsstat.bt – Count some VFS calls, with per-second summaries.
+
+You can directly use the scripts. For example:
+
+$ sudo /usr/share/bpftrace/tools/killsnoop.bt
+
+    bpftrace reference guide – https://github.com/iovisor/bpftrace/blob/master/docs/reference_guide.md
+    bpftrace (DTrace 2.0) for Linux 2018 – http://www.brendangregg.com/blog/2018-10-08/dtrace-for-linux-2018.html
+    BPF: the universal in-kernel virtual machine – https://lwn.net/Articles/599755/
+    Linux Extended BPF (eBPF) Tracing Tools – http://www.brendangregg.com/ebpf.html
+    Dive into BPF: a list of reading material – https://qmonnet.github.io/whirl-offload/2016/09/01/dive-into-bpf
+
+
