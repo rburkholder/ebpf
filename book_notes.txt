@@ -1,0 +1,69 @@
+Notes from Linux Observability with BGP (early release)
+====
+page 12: turn on debuggin for program
+
+union bpf_attr attr = {
+ .prog_type = type,
+ .insns = ptr_to_u64(insns),
+ .insn_cnt = insn_cnt,
+ .license = ptr_to_u64(license),
+ .log_buf = ptr_to_u64(bpf_log_buf),
+ .log_size = LOG_BUF_SIZE,
+ .log_level = 1,
+};
+
+bpf(BPF_PROG_LOAD, &attr, sizeof(attr));
+
+====
+page 13: create map, direct syscall execution
+
+union bpf_attr my_map {
+ .map_type = BPF_MAP_TYPE_HASH,
+ .key_size = sizeof(int),
+ .value_size = sizeof(int),
+ .max_entries = 100,
+ .map_flags = BPF_F_NO_PREALLOC,
+ };
+
+int fd = bpf(BPF_MAP_CREATE, &my_map, sizeof(my_map));
+
+page 14: alternative:
+
+int fd;
+fd = bpf_create_map(BPF_MAP_TYPE_HASH, sizeof(int), sizeof(int), 100, BPF_F_NO_PREALOC);
+
+ELF conventions to create BPF Maps:  predefine in advance 
+using what’s called a "section attribute“, in this case SEC(“maps")
+
+ struct bpf_map_def SEC("maps") my_map = {
+  .type = BPF_MAP_TYPE_HASH,
+  .key_size = sizeof(int),
+  .value_size = sizeof(int),
+  .max_entries = 100,
+  .map_flags = BPF_F_NO_PREALLOC,
+};
+
+ kernel uses a global variable called map_data to store information about the maps in your program. 
+This variable is an array of structures, and it’s ordered by the order in which you specified 
+each map in your code. For example, if the previous map was the first one specified in your code, 
+you’d get the file descriptor identifier from the first element in the array:
+
+fd = map_data[0].fd
+
+===
+
+page 15:
+bpf/bpf_helpers.h, inside the program running on the kernel,
+tools/lib/bpf/bpf.h, inside the program running in user-space.
+
+====
+page 33 has user space object pinning
+
+
+PAGE 62 has libraries to include from kernel source
+
+
+
+
+
+

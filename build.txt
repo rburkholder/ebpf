@@ -1,0 +1,59 @@
+2019/08/14
+
+# clang build of both kernel and userland
+# supercedes the 2019/08/13 notes below
+
+clang \
+  -I /usr/include/x86_64-linux-gnu \
+  -I linux-4.19.39 \
+  -I /usr/src/linux-headers-4.19.0-5-common/include \
+  -O2 -target bpf  -c sock_kern.c -o sock_kern.o
+  
+SRC=linux-4.19.39 \
+LIB=${SRC}/tools/lib/bpf/libbpf.a \
+clang \
+  -I ${SRC}/tools/lib/bpf \
+  -I ${SRC}/tools/lib \
+  -I ${SRC}/tools/include \
+  -I ${SRC}/tools/perf \
+  -I ${SRC}/samples \
+  -I linux-5.2.7/tools/include \
+  -O2 -Wall -g \
+  -o sock_user \
+  ${LIB} -lelf  \
+  sock_user.c ${SRC}/samples/bpf/bpf_load.c
+
+# examples, (book contains one of them)
+# ls -al linux-4.19.39/samples/bpf/
+
+
+
+
+
+2019/08/13
+clang \
+    -I/usr/src/linux-headers-4.19.0-5-common/include \
+    -I/usr/include/x86_64-linux-gnu \
+    -O2 -target bpf  -c hello_kern.c -o hello_kern.o
+
+	
+gcc \
+	-I /usr/include/x86_64-linux-gnu \
+	-I /usr/src/linux-headers-4.19.0-5-amd64/arch/x86/include/generated \
+	-I /usr/src/linux-headers-4.19.0-5-amd64/include \
+	-I /usr/src/linux-headers-4.19.0-5-common/arch/x86/include  \
+	-O2 -Wall -g -lelf -lbpf \
+	-o hello_user hello_user.c linux-4.19.39/samples/bpf/bpf_load.c
+
+clang \
+    -I/usr/src/linux-headers-5.2.0-2-common/include \
+    -I/usr/include/x86_64-linux-gnu \
+    -O2 -target bpf  -c hello_kern.c -o hello_kern.o
+	
+gcc \
+	-I /usr/include/x86_64-linux-gnu \
+	-I /usr/src/linux-headers-5.2.0-2-amd64/arch/x86/include/generated \
+	-I /usr/src/linux-headers-5.2.0-2-amd64/include \
+	-I /usr/src/linux-headers-5.2.0-2-common/arch/x86/include  \
+	-O2 -Wall -g -lelf -lbpf \
+	-o hello_user hello_user.c linux-5.2.7/samples/bpf/bpf_load.c

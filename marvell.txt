@@ -1,0 +1,15 @@
+https://www.sartura.hr/20190227-fast-path-for-embedded-networking.pdf
+
+Extending and adapting eBPF and XDP to embedded networking
+
+Industry collaboration to support Marvell’s mvneta and mvpp drivers
+
+Packet drop rate tests
+
+eBPFprogramandeBPFprogramcompiledwitJITcompiler
+
+Tested on Marvell’s ESPRESSObin board( ARMADA88F3700SoC)
+
+https://github.com/xdp-project/xdp-project/tree/master/areas/arm64
+https://doc.dpdk.org/guides/nics/mvneta.html
+
